@@ -13,9 +13,6 @@
 #include "pico/multicore.h"
 #include "pico/cyw43_arch.h"
 
-//Header file created to use definitions of led_pin() and read_char()
-#include "blink.h"
-
 int count = 0;
 bool on = false;
 

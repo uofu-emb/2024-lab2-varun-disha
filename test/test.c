@@ -4,7 +4,6 @@
 #include <unity.h>
 #include "unity_config.h"
 #include "pico/cyw43_arch.h"
-//#include "blink.h"
 
 void setUp(void) {}
 
@@ -31,17 +30,18 @@ char read_char(char c){
     return c;
 }
 
-void led_pin(){
+void test_led_pin(){
     int count = 0;
     bool on = false;    
     int gpio_state = false;
     int check_count = 0;
-
-    //Testing 10 times as 110 is multiple of 11 and checking how many times it enters the loop to verify.
+    hard_assert(cyw43_arch_init() == PICO_OK);
+    // Testing 10 times as 110 is multiple of 11 and checking how many times it enters the loop to verify.
     for(int loop_count = 0; loop_count <111; loop_count ++)
     {
         cyw43_arch_gpio_put(CYW43_WL_GPIO_LED_PIN, on);
         gpio_state = cyw43_arch_gpio_get(CYW43_WL_GPIO_LED_PIN);
+        // Reading GPIO state and checking if the valuewe set is equal to value read back from board.
         TEST_ASSERT_EQUAL_MESSAGE(gpio_state, on, "TEST FAILED");
         if(count++ % 11){
             check_count++;
@@ -49,6 +49,7 @@ void led_pin(){
         }
         sleep_ms(500);
     }
+    // We are verifying that `check_count` equals 100 because, according to the loop logic, it should execute exactly 100 times—neither more nor less.
     TEST_ASSERT_EQUAL_MESSAGE(check_count, 100, "TEST FAILED");
 }
 
@@ -66,11 +67,6 @@ void test_read_char(){
     }
 }
 
-void test_led_pin(){
-    sleep_ms(5000);
-}
-
-
 int main (void)
 {
     stdio_init_all();
@@ -80,7 +76,7 @@ int main (void)
     // RUN_TEST(test_variable_assignment);
     // RUN_TEST(test_multiplication);
     RUN_TEST(test_read_char);
-    //RUN_TEST(led_pin);
+    RUN_TEST(test_led_pin);
     sleep_ms(5000);
     return UNITY_END();
 }
